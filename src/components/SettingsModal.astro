@@ -1,0 +1,336 @@
+---
+// components/SettingsModal.astro
+---
+
+<div 
+    id="settingsModal"
+    class="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm 
+           opacity-0 transition-opacity duration-300 hidden z-50"
+>
+    <div 
+        class="min-h-screen px-4 text-center flex items-center justify-center"
+    >
+        <div 
+            class="relative bg-white dark:bg-neutral-900 w-full max-w-lg
+                   rounded-3xl p-6 md:p-8
+                   transform scale-95 opacity-0 transition-all duration-300
+                   shadow-xl border border-neutral-200/50 dark:border-neutral-800/50"
+        >
+            <!-- Encabezado -->
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl md:text-2xl font-semibold text-neutral-800 dark:text-neutral-100">
+                    Settings
+                </h2>
+                <button 
+                    id="closeSettings"
+                    class="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors"
+                    aria-label="Close settings"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Formulario de configuración -->
+            <form id="settingsForm" class="space-y-6">
+                <!-- Tiempo de trabajo -->
+                <div class="space-y-2">
+                    <label class="text-sm text-neutral-600 dark:text-neutral-400 block">
+                        Work time (minutes)
+                    </label>
+                    <input 
+                        type="number" 
+                        name="workTime"
+                        value="25" 
+                        min="1" 
+                        max="60"
+                        class="w-full px-4 py-2 rounded-xl border border-neutral-200 dark:border-neutral-800
+                               bg-white dark:bg-neutral-800
+                               text-neutral-800 dark:text-neutral-200
+                               focus:outline-none focus:ring-2 focus:ring-neutral-300 dark:focus:ring-neutral-700"
+                    />
+                </div>
+
+                <!-- Tiempo de descanso corto -->
+                <div class="space-y-2">
+                    <label class="text-sm text-neutral-600 dark:text-neutral-400 block">
+                        Short break time (minutes)
+                    </label>
+                    <input 
+                        type="number" 
+                        name="shortBreakTime"
+                        value="5" 
+                        min="1" 
+                        max="30"
+                        class="w-full px-4 py-2 rounded-xl border border-neutral-200 dark:border-neutral-800
+                               bg-white dark:bg-neutral-800
+                               text-neutral-800 dark:text-neutral-200
+                               focus:outline-none focus:ring-2 focus:ring-neutral-300 dark:focus:ring-neutral-700"
+                    />
+                </div>
+
+                <!-- Tiempo de descanso largo -->
+                <div class="space-y-2">
+                    <label class="text-sm text-neutral-600 dark:text-neutral-400 block">
+                        Long break time (minutes)
+                    </label>
+                    <input 
+                        type="number" 
+                        name="longBreakTime"
+                        value="15" 
+                        min="1" 
+                        max="60"
+                        class="w-full px-4 py-2 rounded-xl border border-neutral-200 dark:border-neutral-800
+                               bg-white dark:bg-neutral-800
+                               text-neutral-800 dark:text-neutral-200
+                               focus:outline-none focus:ring-2 focus:ring-neutral-300 dark:focus:ring-neutral-700"
+                    />
+                </div>
+
+                <!-- Sonido de notificación -->
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-neutral-600 dark:text-neutral-400">
+                        Notification sound
+                    </span>
+                    <button 
+                        type="button"
+                        id="soundToggle"
+                        class="w-12 h-6 rounded-full bg-neutral-200 dark:bg-neutral-700
+                               flex items-center transition-colors focus:outline-none"
+                        role="switch"
+                        aria-checked="true"
+                    >
+                        <span 
+                            class="w-5 h-5 rounded-full bg-white dark:bg-neutral-300 shadow transform translate-x-6 transition-transform"
+                        ></span>
+                    </button>
+                </div>
+
+                <!-- Auto-iniciar descansos -->
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-neutral-600 dark:text-neutral-400">
+                        Auto-start breaks
+                    </span>
+                    <button 
+                        type="button"
+                        id="autoBreakToggle"
+                        class="w-12 h-6 rounded-full bg-neutral-200 dark:bg-neutral-700
+                               flex items-center transition-colors focus:outline-none"
+                        role="switch"
+                        aria-checked="false"
+                    >
+                        <span 
+                            class="w-5 h-5 rounded-full bg-white dark:bg-neutral-300 shadow transform translate-x-0 transition-transform"
+                        ></span>
+                    </button>
+                </div>
+
+                <!-- Auto-iniciar trabajo -->
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-neutral-600 dark:text-neutral-400">
+                        Auto-start work
+                    </span>
+                    <button 
+                        type="button"
+                        id="autoWorkToggle"
+                        class="w-12 h-6 rounded-full bg-neutral-200 dark:bg-neutral-700
+                               flex items-center transition-colors focus:outline-none"
+                        role="switch"
+                        aria-checked="false"
+                    >
+                        <span 
+                            class="w-5 h-5 rounded-full bg-white dark:bg-neutral-300 shadow transform translate-x-0 transition-transform"
+                        ></span>
+                    </button>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="mt-8 flex gap-4">
+                    <button 
+                        type="submit"
+                        class="flex-1 px-6 py-2.5 rounded-xl bg-black dark:bg-white
+                               text-white dark:text-black font-medium
+                               hover:opacity-90 transition-opacity"
+                    >
+                        Save changes
+                    </button>
+                    <button 
+                        type="button"
+                        id="cancelSettings"
+                        class="flex-1 px-6 py-2.5 rounded-xl
+                               bg-neutral-100 dark:bg-neutral-800
+                               text-neutral-700 dark:text-neutral-300 font-medium
+                               hover:opacity-90 transition-opacity"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    import timer from '../utils/timer';
+
+    // Elements
+    const modal = document.getElementById('settingsModal');
+    const form = document.getElementById('settingsForm');
+    const closeBtn = document.getElementById('closeSettings');
+    const cancelBtn = document.getElementById('cancelSettings');
+    const soundToggle = document.getElementById('soundToggle') as HTMLButtonElement;
+    const autoBreakToggle = document.getElementById('autoBreakToggle') as HTMLButtonElement;
+    const autoWorkToggle = document.getElementById('autoWorkToggle') as HTMLButtonElement;
+
+    function handleToggle(button: HTMLButtonElement, settingKey: 'notificationSound' | 'autoStartBreaks' | 'autoStartWork') {
+        if (!button) return;
+        
+        const isEnabled = button.getAttribute('aria-checked') === 'true';
+        const newState = !isEnabled;
+        
+        // Obtener configuración actual
+        const currentSettings = timer.getSettings();
+        
+        // Verificar si realmente hay un cambio
+        if (currentSettings[settingKey] === newState) {
+            console.log('Toggle ya está en el estado deseado, omitiendo actualización');
+            return;
+        }
+        
+        console.log('Cambiando configuración:', {
+            setting: settingKey,
+            de: isEnabled,
+            a: newState
+        });
+        
+        // Actualizar UI
+        button.setAttribute('aria-checked', newState.toString());
+        const span = button.querySelector('span');
+        if (span) {
+            span.style.transform = newState ? 'translateX(1.5rem)' : 'translateX(0)';
+        }
+
+        // Actualizar configuración
+        timer.updateSettings({
+            [settingKey]: newState
+        });
+    }
+
+    // Usar debounce para los event listeners
+    function debounce(func: Function, wait: number) {
+        let timeout: number | null = null;
+        return function executedFunction(...args: any[]) {
+            if (timeout) {
+                window.clearTimeout(timeout);
+            }
+            timeout = window.setTimeout(() => {
+                func(...args);
+                timeout = null;
+            }, wait);
+        };
+    }
+
+    // Event listeners con debounce
+    const debouncedToggle = debounce((button: HTMLButtonElement, key: 'notificationSound' | 'autoStartBreaks' | 'autoStartWork') => {
+        handleToggle(button, key);
+    }, 100);
+
+    soundToggle?.addEventListener('click', () => 
+        debouncedToggle(soundToggle, 'notificationSound')
+    );
+    
+    autoBreakToggle?.addEventListener('click', () => 
+        debouncedToggle(autoBreakToggle, 'autoStartBreaks')
+    );
+    
+    autoWorkToggle?.addEventListener('click', () => 
+        debouncedToggle(autoWorkToggle, 'autoStartWork')
+    );
+
+    function loadSettings() {
+        const settings = timer.getSettings();
+        
+        // Cargar inputs numéricos
+        const inputs = {
+            workTime: document.querySelector('input[name="workTime"]') as HTMLInputElement,
+            shortBreakTime: document.querySelector('input[name="shortBreakTime"]') as HTMLInputElement,
+            longBreakTime: document.querySelector('input[name="longBreakTime"]') as HTMLInputElement
+        };
+
+        if (inputs.workTime) inputs.workTime.value = settings.workTime.toString();
+        if (inputs.shortBreakTime) inputs.shortBreakTime.value = settings.shortBreakTime.toString();
+        if (inputs.longBreakTime) inputs.longBreakTime.value = settings.longBreakTime.toString();
+        
+        // Cargar estados de los toggles
+        if (soundToggle) {
+            soundToggle.setAttribute('aria-checked', settings.notificationSound.toString());
+            const span = soundToggle.querySelector('span');
+            if (span) {
+                span.style.transform = settings.notificationSound ? 
+                    'translateX(1.5rem)' : 'translateX(0)';
+            }
+        }
+
+        if (autoBreakToggle) {
+            autoBreakToggle.setAttribute('aria-checked', settings.autoStartBreaks.toString());
+            const span = autoBreakToggle.querySelector('span');
+            if (span) {
+                span.style.transform = settings.autoStartBreaks ? 
+                    'translateX(1.5rem)' : 'translateX(0)';
+            }
+        }
+
+        if (autoWorkToggle) {
+            autoWorkToggle.setAttribute('aria-checked', settings.autoStartWork.toString());
+            const span = autoWorkToggle.querySelector('span');
+            if (span) {
+                span.style.transform = settings.autoStartWork ? 
+                    'translateX(1.5rem)' : 'translateX(0)';
+            }
+        }
+    }
+
+    // Modal handlers y event listeners básicos
+    function closeModal() {
+        modal?.classList.remove('modal-active');
+        setTimeout(() => modal?.classList.add('hidden'), 300);
+    }
+
+    closeBtn?.addEventListener('click', closeModal);
+    cancelBtn?.addEventListener('click', closeModal);
+    modal?.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    // Form submission solo para los tiempos
+    form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target as HTMLFormElement);
+        
+        const currentSettings = timer.getSettings();
+        
+        timer.updateSettings({
+            ...currentSettings,
+            workTime: parseInt(formData.get('workTime') as string),
+            shortBreakTime: parseInt(formData.get('shortBreakTime') as string),
+            longBreakTime: parseInt(formData.get('longBreakTime') as string)
+        });
+
+        closeModal();
+    });
+
+    // Load settings when modal opens
+    document.addEventListener('DOMContentLoaded', loadSettings);
+</script>
+
+<style>
+    #settingsModal.modal-active {
+        opacity: 1;
+    }
+
+    #settingsModal.modal-active > div > div {
+        transform: scale(1);
+        opacity: 1;
+    }
+</style>

@@ -1,0 +1,544 @@
+---
+import SettingsModal from './SettingsModal.astro';
+---
+
+<div class="flex flex-col items-center justify-center gap-6 md:gap-8 p-4 md:p-8 w-full">
+    <!-- Timer container -->
+    <div 
+        class="relative p-8 sm:p-10 md:p-12
+               rounded-[2.5rem] md:rounded-[3rem]
+               bg-white/10 dark:bg-black/10 
+               backdrop-blur-xl 
+               border border-white/20 dark:border-neutral-800/30 
+               shadow-[0_8px_16px_rgba(0,0,0,0.02)] dark:shadow-none
+               mx-auto">
+        <!-- Background gradient -->
+        <div 
+            class="absolute inset-0 
+                   rounded-[2.5rem] md:rounded-[3rem]
+                   bg-gradient-to-br from-rose-100/20 via-amber-50/10 to-orange-100/20 
+                   dark:from-neutral-900/20 dark:via-neutral-900/10 dark:to-neutral-800/20 
+                   -z-10">
+        </div>
+        
+        <!-- Timer display -->
+        <div 
+            id="timerDisplay"
+            class="timer-display 
+                   text-8xl sm:text-9xl md:text-[10rem] lg:text-[12rem]
+                   font-light tracking-tight 
+                   text-neutral-800 dark:text-neutral-100 
+                   tabular-nums
+                   leading-none">
+            25:00
+        </div>
+    </div>
+
+    <!-- Mode indicator -->
+    <div id="modeIndicator" class="text-neutral-600 dark:text-neutral-400 text-lg">
+        Work Time
+    </div>
+
+    <!-- Controls with icons and animations -->
+    <div class="flex gap-2 sm:gap-4 w-full max-w-[280px] sm:max-w-sm md:max-w-md mx-auto">
+        <button 
+            id="startBtn"
+            class="flex-1 py-3 sm:py-4 px-3 sm:px-4
+                   rounded-2xl
+                   bg-black/90 dark:bg-white/90
+                   text-white dark:text-black 
+                   text-base sm:text-lg md:text-xl font-medium
+                   hover:scale-[1.02] active:scale-[0.98] 
+                   transition-all duration-200
+                   shadow-sm
+                   flex items-center justify-center gap-2 sm:gap-3
+                   group
+                   relative
+                   overflow-hidden
+                   data-[state=playing]:bg-red-500/90 dark:data-[state=playing]:bg-red-500/90
+                   data-[state=playing]:text-white dark:data-[state=playing]:text-white
+                   data-[state=playing]:hover:bg-red-600/90 dark:data-[state=playing]:hover:bg-red-600/90"
+        >
+            <!-- Icon container -->
+            <div class="relative w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 flex items-center justify-center">
+                <!-- Play icon -->
+                <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    class="w-7 h-7 transition-all duration-500 absolute
+                           group-data-[state=playing]:rotate-90 group-data-[state=playing]:opacity-0" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                >
+                    <path 
+                        stroke-linecap="round" 
+                        stroke-linejoin="round" 
+                        stroke-width="2" 
+                        d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                    />
+                    <path 
+                        stroke-linecap="round" 
+                        stroke-linejoin="round" 
+                        stroke-width="2" 
+                        d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                </svg>
+
+                <!-- Pause icon -->
+                <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    class="w-7 h-7 transition-all duration-500 absolute
+                           -rotate-90 opacity-0
+                           group-data-[state=playing]:rotate-0 group-data-[state=playing]:opacity-100" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                >
+                    <path 
+                        stroke-linecap="round" 
+                        stroke-linejoin="round" 
+                        stroke-width="2" 
+                        d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                </svg>
+            </div>
+
+            <!-- Text container -->
+            <div class="min-w-[3rem] sm:min-w-[4rem] text-center">
+                <span class="block group-data-[state=playing]:hidden">Start</span>
+                <span class="hidden group-data-[state=playing]:block">Pause</span>
+            </div>
+        </button>
+
+        <div class="flex gap-1.5 sm:gap-2 flex-1">  <!-- Wrapper for Reset and Info -->
+            <button 
+                id="resetBtn"
+                class="flex-1 py-3 sm:py-4 px-3 sm:px-4
+                       rounded-2xl
+                       bg-white/50 dark:bg-neutral-800/50
+                       text-neutral-700 dark:text-neutral-200 
+                       text-base sm:text-lg md:text-xl font-medium
+                       hover:scale-[1.02] active:scale-[0.98] 
+                       transition-all duration-200
+                       border border-neutral-200/50 dark:border-neutral-700/50
+                       flex items-center justify-center gap-2 sm:gap-3
+                       group
+                       select-none"
+            >
+                <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 transition-transform duration-500 group-hover:rotate-180" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                >
+                    <path 
+                        stroke-linecap="round" 
+                        stroke-linejoin="round" 
+                        stroke-width="2" 
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                </svg>
+                <span class="min-w-[3rem] sm:min-w-[4rem] text-center">Reset</span>
+            </button>
+
+            <!-- Info button -->
+            <button 
+                id="infoBtn"
+                class="p-3 sm:p-4
+                       rounded-2xl
+                       bg-white/50 dark:bg-neutral-800/50
+                       text-neutral-700 dark:text-neutral-200 
+                       hover:scale-[1.02] active:scale-[0.98] 
+                       transition-all duration-200
+                       border border-neutral-200/50 dark:border-neutral-700/50
+                       flex items-center justify-center
+                       group"
+                aria-label="Timer controls info"
+            >
+                <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                >
+                    <path 
+                        stroke-linecap="round" 
+                        stroke-linejoin="round" 
+                        stroke-width="2" 
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Settings button -->
+    <button 
+        id="openSettings"
+        class="mt-2 px-5 py-3
+               rounded-xl
+               bg-white/20 dark:bg-black/20 
+               text-neutral-600 dark:text-neutral-400
+               hover:bg-white/30 dark:hover:bg-black/30
+               transition-all duration-200
+               flex items-center gap-3
+               text-base
+               group"
+        aria-label="Open settings"
+    >
+        <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="w-5 h-5
+                   transition-transform duration-500 group-hover:rotate-180"
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+        >
+            <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+            />
+            <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+        </svg>
+        <span>Settings</span>
+    </button>
+
+    <!-- Settings modal -->
+    <SettingsModal />
+
+    <!-- Info Modal -->
+    <div 
+        id="infoModal"
+        class="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm 
+               opacity-0 transition-opacity duration-300 hidden z-50"
+    >
+        <div class="min-h-screen px-4 text-center flex items-center justify-center">
+            <div 
+                class="relative bg-white dark:bg-neutral-900 w-full max-w-md
+                       rounded-3xl p-6 md:p-8
+                       transform scale-95 opacity-0 transition-all duration-300
+                       shadow-xl border border-neutral-200/50 dark:border-neutral-800/50"
+            >
+                <h2 class="text-xl font-semibold mb-4 text-neutral-800 dark:text-neutral-100">
+                    Timer Controls
+                </h2>
+                <div class="space-y-4 text-neutral-600 dark:text-neutral-400">
+                    <p class="flex items-center gap-3">
+                        <kbd class="px-2 py-1 rounded bg-neutral-100 dark:bg-neutral-800">Space</kbd>
+                        <span>Start/Pause timer</span>
+                    </p>
+                    <p class="flex items-center gap-3">
+                        <kbd class="px-2 py-1 rounded bg-neutral-100 dark:bg-neutral-800">R</kbd>
+                        <span>Reset current timer</span>
+                    </p>
+                    <p class="flex items-center gap-3">
+                        <span class="px-2 py-1 rounded bg-neutral-100 dark:bg-neutral-800">Click Reset</span>
+                        <span>Reset current timer</span>
+                    </p>
+                    <p class="flex items-center gap-3">
+                        <span class="px-2 py-1 rounded bg-neutral-100 dark:bg-neutral-800">Hold Reset</span>
+                        <span>Reset entire session</span>
+                    </p>
+                </div>
+                <button 
+                    class="mt-6 px-4 py-2 w-full
+                           rounded-xl bg-neutral-100 dark:bg-neutral-800
+                           text-neutral-700 dark:text-neutral-300
+                           hover:opacity-90 transition-opacity"
+                    onclick="document.getElementById('infoModal').classList.remove('modal-active'); 
+                             setTimeout(() => document.getElementById('infoModal').classList.add('hidden'), 300);"
+                >
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes subtle-breath {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.002); }
+    }
+
+    .timer-display {
+        animation: subtle-breath 4s ease-in-out infinite;
+    }
+
+    #infoModal.modal-active {
+        opacity: 1;
+    }
+
+    #infoModal.modal-active > div > div {
+        transform: scale(1);
+        opacity: 1;
+    }
+</style>
+<script>
+    import { PomodoroTimer } from '../utils/timer';
+
+    // Initialize timer
+    const timer = new PomodoroTimer();
+    
+    // DOM Elements
+    const timerDisplay = document.getElementById('timerDisplay');
+    const modeIndicator = document.getElementById('modeIndicator');
+    const startBtn = document.getElementById('startBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const openSettingsBtn = document.getElementById('openSettings');
+    const modal = document.getElementById('settingsModal');
+    const closeModalBtn = document.getElementById('closeSettings');
+
+    // Update UI function
+    function updateUI() {
+        const state = timer.getState();
+        if (!timerDisplay || !modeIndicator || !startBtn) return;
+
+        // Update timer display
+        const minutes = Math.floor(state.timeLeft / 60);
+        const seconds = state.timeLeft % 60;
+        const timeDisplay = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        timerDisplay.textContent = timeDisplay;
+        
+        // Update document title
+        document.title = `${timeDisplay} - SmartPomodoro`;
+
+        // Update mode indicator
+        const modeText = {
+            'work': 'Work Time',
+            'shortBreak': 'Short Break',
+            'longBreak': 'Long Break'
+        }[state.mode];
+        modeIndicator.textContent = modeText;
+
+        // Update button state
+        startBtn.setAttribute('data-state', state.isActive ? 'playing' : 'paused');
+    }
+
+    // Initialize notification
+    let notification: Notification | null = null;
+    if ('Notification' in window) {
+        Notification.requestPermission();
+    }
+
+    function showNotification(title: string, body: string) {
+        if ('Notification' in window && Notification.permission === 'granted') {
+            if (notification) {
+                notification.close();
+            }
+            notification = new Notification(title, {
+                body,
+                //icon: '/favicon.ico'
+            });
+        }
+    }
+
+    // Timer event handlers
+    timer.onTick(() => {
+        updateUI();
+    });
+
+    timer.onModeChange((mode) => {
+        const messages = {
+            'work': '🎯 Time to focus!',
+            'shortBreak': '☕ Take a short break!',
+            'longBreak': '🌟 Time for a longer break!'
+        };
+        showNotification('Smart Pomodoro', messages[mode]);
+        updateUI();
+    });
+
+    // Button event listeners
+    startBtn?.addEventListener('click', () => {
+        timer.initializeAudio();
+        const state = timer.getState();
+        if (state.isActive) {
+            timer.pause();
+        } else {
+            timer.start();
+        }
+        updateUI();
+    });
+
+    resetBtn?.addEventListener('click', () => {
+        timer.reset();
+        updateUI();
+    });
+
+    // Modal handlers
+    openSettingsBtn?.addEventListener('click', () => {
+        // Load current settings into form
+        const settings = timer.getSettings();
+        const workTimeInput = document.querySelector('input[name="workTime"]') as HTMLInputElement;
+        const shortBreakInput = document.querySelector('input[name="shortBreakTime"]') as HTMLInputElement;
+        const longBreakInput = document.querySelector('input[name="longBreakTime"]') as HTMLInputElement;
+        const soundToggle = document.querySelector('[role="switch"]') as HTMLButtonElement;
+
+        if (workTimeInput) workTimeInput.value = settings.workTime.toString();
+        if (shortBreakInput) shortBreakInput.value = settings.shortBreakTime.toString();
+        if (longBreakInput) longBreakInput.value = settings.longBreakTime.toString();
+        if (soundToggle) {
+            soundToggle.setAttribute('aria-checked', settings.notificationSound.toString());
+            const span = soundToggle.querySelector('span');
+            if (span) {
+                span.style.transform = settings.notificationSound ? 
+                    'translateX(1.5rem)' : 'translateX(0)';
+            }
+        }
+
+        modal?.classList.remove('hidden');
+        setTimeout(() => modal?.classList.add('modal-active'), 10);
+    });
+
+    closeModalBtn?.addEventListener('click', () => {
+        modal?.classList.remove('modal-active');
+        setTimeout(() => modal?.classList.add('hidden'), 300);
+    });
+
+    modal?.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('modal-active');
+            setTimeout(() => modal?.classList.add('hidden'), 300);
+        }
+    });
+
+    // Settings form handler
+    const settingsForm = document.getElementById('settingsForm');
+    settingsForm?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target as HTMLFormElement);
+        
+        const workTime = parseInt(formData.get('workTime') as string);
+        const shortBreakTime = parseInt(formData.get('shortBreakTime') as string);
+        const longBreakTime = parseInt(formData.get('longBreakTime') as string);
+        const soundToggle = document.querySelector('[role="switch"]') as HTMLButtonElement;
+        const notificationSound = soundToggle?.getAttribute('aria-checked') === 'true';
+
+        timer.updateSettings({
+            workTime,
+            shortBreakTime,
+            longBreakTime,
+            notificationSound
+        });
+
+        // Close modal
+        modal?.classList.remove('modal-active');
+        setTimeout(() => modal?.classList.add('hidden'), 300);
+    });
+
+    // Sound toggle handler
+    const soundToggle = document.querySelector('[role="switch"]');
+    soundToggle?.addEventListener('click', function(this: HTMLButtonElement) {
+        const isEnabled = this.getAttribute('aria-checked') === 'true';
+        this.setAttribute('aria-checked', (!isEnabled).toString());
+        const span = this.querySelector('span');
+        if (span) {
+            span.style.transform = !isEnabled ? 'translateX(1.5rem)' : 'translateX(0)';
+        }
+    });
+
+    // Initialize UI
+    updateUI();
+
+    // Key bindings
+    document.addEventListener('keydown', (e) => {
+        timer.initializeAudio();
+        if (e.code === 'Space') {
+            e.preventDefault();
+            const state = timer.getState();
+            if (state.isActive) {
+                timer.pause();
+            } else {
+                timer.start();
+            }
+            updateUI();
+        } else if (e.code === 'KeyR') {
+            e.preventDefault();
+            timer.reset();
+            updateUI();
+        }
+    });
+
+    // Reset button long press functionality
+    let resetTimer: number | null = null;
+    const LONG_PRESS_DURATION = 1000;
+    let isLongPressing = false;
+
+    // Función para manejar el reset
+    function handleResetLongPress() {
+        timer.resetSession();
+        updateUI();
+        isLongPressing = true;
+    }
+
+    // Función para limpiar el timer
+    function clearResetTimer() {
+        if (resetTimer) {
+            clearTimeout(resetTimer);
+            resetTimer = null;
+        }
+        isLongPressing = false;
+    }
+
+    // Mouse events (PC)
+    resetBtn?.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        resetTimer = window.setTimeout(handleResetLongPress, LONG_PRESS_DURATION);
+    });
+
+    resetBtn?.addEventListener('mouseup', (e) => {
+        e.preventDefault();
+        if (!isLongPressing) {
+            timer.reset();
+            updateUI();
+        }
+        clearResetTimer();
+    });
+
+    resetBtn?.addEventListener('mouseleave', () => {
+        clearResetTimer();
+    });
+
+    // Touch events (Mobile)
+    resetBtn?.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        resetTimer = window.setTimeout(handleResetLongPress, LONG_PRESS_DURATION);
+    });
+
+    resetBtn?.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        if (!isLongPressing) {
+            timer.reset();
+            updateUI();
+        }
+        clearResetTimer();
+    });
+
+    resetBtn?.addEventListener('touchcancel', () => {
+        clearResetTimer();
+    });
+
+    // Prevenir el menú contextual
+    resetBtn?.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+    });
+
+    // Info button functionality
+    const infoBtn = document.getElementById('infoBtn');
+    const infoModal = document.getElementById('infoModal');
+
+    infoBtn?.addEventListener('click', () => {
+        infoModal?.classList.remove('hidden');
+        setTimeout(() => infoModal?.classList.add('modal-active'), 10);
+    });
+</script>

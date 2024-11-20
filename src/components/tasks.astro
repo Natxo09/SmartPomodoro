@@ -1,0 +1,366 @@
+---
+// components/Tasks.astro
+import { marked } from 'marked';
+---
+
+<div class="flex flex-col gap-6 p-4 md:p-8 w-full max-w-2xl mx-auto">
+    <div 
+        class="relative p-6 sm:p-8
+               rounded-2xl md:rounded-3xl
+               bg-white/10 dark:bg-black/10 
+               backdrop-blur-xl 
+               border border-white/20 dark:border-neutral-800/30 
+               shadow-[0_8px_16px_rgba(0,0,0,0.02)] dark:shadow-none"
+    >
+        <div 
+            class="absolute inset-0 
+                   rounded-2xl md:rounded-3xl
+                   bg-gradient-to-br from-rose-100/20 via-amber-50/10 to-orange-100/20 
+                   dark:from-neutral-900/20 dark:via-neutral-900/10 dark:to-neutral-800/20 
+                   -z-10">
+        </div>
+
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-medium text-neutral-800 dark:text-neutral-100">Tasks</h2>
+            <button 
+                id="addTaskBtn"
+                class="p-2 rounded-xl
+                       bg-black/90 dark:bg-white/90
+                       text-white dark:text-black 
+                       hover:scale-[1.02] active:scale-[0.98] 
+                       transition-all duration-200
+                       shadow-sm"
+                aria-label="Add task"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+            </button>
+        </div>
+
+        <div id="tasksList" class="space-y-3">
+            <!-- Tasks will be inserted here -->
+        </div>
+
+        <form 
+            id="addTaskForm"
+            class="scale-95 opacity-0 hidden mt-6 p-6
+                   rounded-xl
+                   bg-white/50 dark:bg-black/50
+                   border border-white/20 dark:border-neutral-800/30
+                   transition-all duration-300 ease-out"
+        >
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">
+                        Task name
+                    </label>
+                    <input 
+                        type="text"
+                        id="taskName"
+                        placeholder="What do you need to do?"
+                        class="w-full px-4 py-2.5
+                               rounded-lg
+                               bg-white/50 dark:bg-black/50
+                               border border-neutral-200/50 dark:border-neutral-700/50
+                               text-neutral-800 dark:text-neutral-100
+                               placeholder-neutral-400 dark:placeholder-neutral-500
+                               focus:outline-none focus:ring-2 focus:ring-rose-500/50
+                               transition-all duration-200"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">
+                        Description (supports Markdown)
+                    </label>
+                    <textarea 
+                        id="taskDescription"
+                        rows="3"
+                        placeholder="Add some details about your task..."
+                        class="w-full px-4 py-2.5
+                               rounded-lg
+                               bg-white/50 dark:bg-black/50
+                               border border-neutral-200/50 dark:border-neutral-700/50
+                               text-neutral-800 dark:text-neutral-100
+                               placeholder-neutral-400 dark:placeholder-neutral-500
+                               focus:outline-none focus:ring-2 focus:ring-rose-500/50
+                               transition-all duration-200
+                               resize-none"
+                    ></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">
+                        Estimated pomodoros
+                    </label>
+                    <div class="flex items-center gap-3">
+                        <button 
+                            type="button"
+                            id="decrementPomodoros"
+                            class="p-2 rounded-lg
+                                   bg-neutral-200/50 dark:bg-neutral-800/50
+                                   hover:bg-neutral-300/50 dark:hover:bg-neutral-700/50
+                                   transition-colors duration-200"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+                            </svg>
+                        </button>
+                        <input 
+                            type="number"
+                            id="taskPomodoros"
+                            min="1"
+                            value="1"
+                            class="w-24 px-4 py-2.5 text-center
+                                   rounded-lg
+                                   bg-white/50 dark:bg-black/50
+                                   border border-neutral-200/50 dark:border-neutral-700/50
+                                   text-neutral-800 dark:text-neutral-100
+                                   focus:outline-none focus:ring-2 focus:ring-rose-500/50
+                                   transition-all duration-200"
+                        />
+                        <button 
+                            type="button"
+                            id="incrementPomodoros"
+                            class="p-2 rounded-lg
+                                   bg-neutral-200/50 dark:bg-neutral-800/50
+                                   hover:bg-neutral-300/50 dark:hover:bg-neutral-700/50
+                                   transition-colors duration-200"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 justify-end pt-2">
+                    <button 
+                        type="button"
+                        id="cancelAddTask"
+                        class="px-4 py-2.5
+                               rounded-lg
+                               bg-neutral-200/50 dark:bg-neutral-800/50
+                               text-neutral-600 dark:text-neutral-400
+                               hover:bg-neutral-300/50 dark:hover:bg-neutral-700/50
+                               transition-all duration-200"
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        type="submit"
+                        class="px-4 py-2.5
+                               rounded-lg
+                               bg-black/90 dark:bg-white/90
+                               text-white dark:text-black
+                               hover:scale-[1.02] active:scale-[0.98]
+                               transition-all duration-200"
+                    >
+                        Add task
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    import { marked } from 'marked';
+
+    interface Task {
+        id: string;
+        name: string;
+        description: string;
+        pomodoros: number;
+        completed: boolean;
+        pomodorosCompleted: number;
+    }
+
+    // Initial state
+    let tasks: Task[] = JSON.parse(localStorage.getItem('tasks') || '[]');
+
+    // DOM Elements
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const addTaskForm = document.getElementById('addTaskForm');
+    const tasksList = document.getElementById('tasksList');
+    const cancelAddTaskBtn = document.getElementById('cancelAddTask');
+    const pomodorosInput = document.getElementById('taskPomodoros') as HTMLInputElement;
+    const incrementBtn = document.getElementById('incrementPomodoros');
+    const decrementBtn = document.getElementById('decrementPomodoros');
+
+    // Helper functions
+    const saveTasks = () => {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+    };
+
+    const createTaskElement = (task: Task) => {
+        const taskElement = document.createElement('div');
+        taskElement.className = `
+            group flex flex-col gap-2 p-4
+            rounded-xl
+            bg-white/50 dark:bg-black/50
+            border border-neutral-200/50 dark:border-neutral-700/50
+            transition-all duration-300
+            opacity-0 translate-y-2
+            ${task.completed ? 'opacity-50' : ''}
+        `;
+        
+        // Add animation classes after a moment
+        setTimeout(() => {
+            taskElement.classList.remove('opacity-0', 'translate-y-2');
+        }, 50);
+        
+        taskElement.innerHTML = `
+            <div class="flex items-start gap-4">
+                <input 
+                    type="checkbox" 
+                    ${task.completed ? 'checked' : ''} 
+                    class="w-5 h-5 mt-1 rounded-lg accent-rose-500 transition-all duration-200"
+                />
+                <div class="flex-1 min-w-0">
+                    <p class="text-neutral-800 dark:text-neutral-100 font-medium
+                             ${task.completed ? 'line-through' : ''}">${task.name}</p>
+                    ${task.description ? `
+                        <div class="mt-2 prose prose-sm dark:prose-invert prose-neutral 
+                                  max-w-none 
+                                  [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+                            ${marked(task.description)}
+                        </div>
+                    ` : ''}
+                    <div class="flex gap-2 items-center mt-3">
+                        ${Array(task.pomodoros).fill(0).map((_, i) => `
+                            <span class="w-4 h-4 rounded-full 
+                                       transition-all duration-300 ease-out
+                                       ${i < task.pomodorosCompleted
+                                           ? 'bg-rose-500/90 scale-100'
+                                           : 'bg-neutral-200/50 dark:bg-neutral-700/50 scale-90'
+                                       }"
+                            ></span>
+                        `).join('')}
+                    </div>
+                </div>
+                <button 
+                    class="delete-task p-2 
+                           opacity-0 group-hover:opacity-100
+                           text-neutral-400 hover:text-red-500
+                           transition-all duration-200
+                           -mr-2"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </button>
+            </div>
+        `;
+
+        return taskElement;
+    };
+
+    const renderTasks = () => {
+        if (!tasksList) return;
+        
+        tasksList.innerHTML = '';
+        tasks.forEach((task, index) => {
+            const taskElement = createTaskElement(task);
+            tasksList.appendChild(taskElement);
+            // Add progressive delay for cascade effect
+            setTimeout(() => {
+                taskElement.classList.remove('opacity-0', 'translate-y-2');
+            }, 50 * index);
+        });
+
+        // Add event listeners to new elements
+        document.querySelectorAll('.delete-task').forEach((btn, index) => {
+            btn.addEventListener('click', () => deleteTask(index));
+        });
+
+        document.querySelectorAll('input[type="checkbox"]').forEach((checkbox, index) => {
+            checkbox.addEventListener('change', () => toggleTaskComplete(index));
+        });
+    };
+
+    const toggleAddTaskForm = () => {
+        if (!addTaskForm) return;
+        const isHidden = addTaskForm.classList.contains('hidden');
+        
+        if (isHidden) {
+            addTaskForm.classList.remove('hidden');
+            setTimeout(() => {
+                addTaskForm.classList.remove('scale-95', 'opacity-0');
+            }, 50);
+        } else {
+            addTaskForm.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                addTaskForm.classList.add('hidden');
+            }, 300);
+        }
+    };
+
+    const addTask = (e: Event) => {
+        e.preventDefault();
+        const taskNameInput = document.getElementById('taskName') as HTMLInputElement;
+        const taskDescriptionInput = document.getElementById('taskDescription') as HTMLTextAreaElement;
+        const taskPomodorosInput = document.getElementById('taskPomodoros') as HTMLInputElement;
+
+        if (!taskNameInput || !taskPomodorosInput || !taskDescriptionInput) return;
+
+        const newTask: Task = {
+            id: Date.now().toString(),
+            name: taskNameInput.value,
+            description: taskDescriptionInput.value,
+            pomodoros: parseInt(taskPomodorosInput.value),
+            completed: false,
+            pomodorosCompleted: 0
+        };
+
+        tasks.push(newTask);
+        saveTasks();
+        renderTasks();
+
+        // Reset form
+        taskNameInput.value = '';
+        taskDescriptionInput.value = '';
+        taskPomodorosInput.value = '1';
+        toggleAddTaskForm();
+    };
+
+    const deleteTask = (index: number) => {
+        const taskElements = tasksList?.children;
+        if (!taskElements) return;
+
+        const taskElement = taskElements[index];
+        taskElement.classList.add('opacity-0', 'scale-95');
+
+        setTimeout(() => {
+            tasks.splice(index, 1);
+            saveTasks();
+            renderTasks();
+        }, 200);
+    };
+
+    const toggleTaskComplete = (index: number) => {
+        tasks[index].completed = !tasks[index].completed;
+        saveTasks();
+        renderTasks();
+    };
+
+    const updatePomodoros = (increment: boolean) => {
+        if (!pomodorosInput) return;
+        const currentValue = parseInt(pomodorosInput.value);
+        pomodorosInput.value = increment 
+            ? Math.min(currentValue + 1, 10).toString()
+            : Math.max(currentValue - 1, 1).toString();
+    };
+
+    // Event listeners
+    addTaskBtn?.addEventListener('click', toggleAddTaskForm);
+    cancelAddTaskBtn?.addEventListener('click', toggleAddTaskForm);
+    addTaskForm?.addEventListener('submit', addTask as EventListener);
+    incrementBtn?.addEventListener('click', () => updatePomodoros(true));
+    decrementBtn?.addEventListener('click', () => updatePomodoros(false));
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', renderTasks);
+</script>
