@@ -1,0 +1,198 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="description" content="Astro description"><meta name="viewport" content="width=device-width"><link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍅</text></svg>"><meta name="generator" content="Astro v4.16.12"><title>Pomodoro - SmartPomodoro</title><link rel="stylesheet" href="/_astro/index.CrI3mrcP.css"><script type="module" src="/_astro/hoisted.CXfO1aM0.js"></script></head> <body class="min-h-screen transition-all duration-300"> <!-- Fondo con gradiente estilo Apple/Cozy --> <div class="fixed inset-0 -z-10 bg-gradient-to-b 
+            from-rose-50 via-cream-50 to-amber-50/80
+            dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950
+            transition-colors duration-500"></div> <!-- Sutil efecto de ruido para textura --> <div class="fixed inset-0 -z-10 opacity-[0.015] mix-blend-overlay"></div> <!-- Contenido principal --> <main class="relative z-10">   <button id="theme-toggle" class="fixed top-4 right-4 p-3 rounded-full
+               bg-white/60 dark:bg-black/60
+               backdrop-blur-xl
+               hover:bg-white/80 dark:hover:bg-neutral-900/80
+               shadow-sm dark:shadow-none
+               transition-all duration-300
+               border border-white/20 dark:border-neutral-800/30
+               z-50
+               group" aria-label="Toggle theme"> <svg id="sun-icon" class="w-5 h-5 hidden dark:block text-amber-300/90 transition-transform duration-300 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path> </svg> <svg id="moon-icon" class="w-5 h-5 block dark:hidden text-neutral-700/90 transition-transform duration-300 group-hover:-rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path> </svg> </button> <main class="min-h-screen flex flex-col items-center justify-center"> <div class="flex flex-col items-center justify-center gap-6 md:gap-8 p-4 md:p-8 w-full" data-astro-cid-z44o3lkb> <!-- Timer container --> <div class="relative p-8 sm:p-10 md:p-12
+               rounded-[2.5rem] md:rounded-[3rem]
+               bg-white/10 dark:bg-black/10 
+               backdrop-blur-xl 
+               border border-white/20 dark:border-neutral-800/30 
+               shadow-[0_8px_16px_rgba(0,0,0,0.02)] dark:shadow-none
+               mx-auto" data-astro-cid-z44o3lkb> <!-- Background gradient --> <div class="absolute inset-0 
+                   rounded-[2.5rem] md:rounded-[3rem]
+                   bg-gradient-to-br from-rose-100/20 via-amber-50/10 to-orange-100/20 
+                   dark:from-neutral-900/20 dark:via-neutral-900/10 dark:to-neutral-800/20 
+                   -z-10" data-astro-cid-z44o3lkb></div> <!-- Timer display --> <div id="timerDisplay" class="timer-display 
+                   text-8xl sm:text-9xl md:text-[10rem] lg:text-[12rem]
+                   font-light tracking-tight 
+                   text-neutral-800 dark:text-neutral-100 
+                   tabular-nums
+                   leading-none" data-astro-cid-z44o3lkb>
+25:00
+</div> </div> <!-- Mode indicator --> <div id="modeIndicator" class="text-neutral-600 dark:text-neutral-400 text-lg" data-astro-cid-z44o3lkb>
+Work Time
+</div> <!-- Controls with icons and animations --> <div class="flex gap-2 sm:gap-4 w-full max-w-[280px] sm:max-w-sm md:max-w-md mx-auto" data-astro-cid-z44o3lkb> <button id="startBtn" class="flex-1 py-3 sm:py-4 px-3 sm:px-4
+                   rounded-2xl
+                   bg-black/90 dark:bg-white/90
+                   text-white dark:text-black 
+                   text-base sm:text-lg md:text-xl font-medium
+                   hover:scale-[1.02] active:scale-[0.98] 
+                   transition-all duration-200
+                   shadow-sm
+                   flex items-center justify-center gap-2 sm:gap-3
+                   group
+                   relative
+                   overflow-hidden
+                   data-[state=playing]:bg-red-500/90 dark:data-[state=playing]:bg-red-500/90
+                   data-[state=playing]:text-white dark:data-[state=playing]:text-white
+                   data-[state=playing]:hover:bg-red-600/90 dark:data-[state=playing]:hover:bg-red-600/90" data-astro-cid-z44o3lkb> <!-- Icon container --> <div class="relative w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 flex items-center justify-center" data-astro-cid-z44o3lkb> <!-- Play icon --> <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 transition-all duration-500 absolute
+                           group-data-[state=playing]:rotate-90 group-data-[state=playing]:opacity-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-z44o3lkb> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" data-astro-cid-z44o3lkb></path> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" data-astro-cid-z44o3lkb></path> </svg> <!-- Pause icon --> <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 transition-all duration-500 absolute
+                           -rotate-90 opacity-0
+                           group-data-[state=playing]:rotate-0 group-data-[state=playing]:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-z44o3lkb> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" data-astro-cid-z44o3lkb></path> </svg> </div> <!-- Text container --> <div class="min-w-[3rem] sm:min-w-[4rem] text-center" data-astro-cid-z44o3lkb> <span class="block group-data-[state=playing]:hidden" data-astro-cid-z44o3lkb>Start</span> <span class="hidden group-data-[state=playing]:block" data-astro-cid-z44o3lkb>Pause</span> </div> </button> <div class="flex gap-1.5 sm:gap-2 flex-1" data-astro-cid-z44o3lkb> <!-- Wrapper for Reset and Info --> <button id="resetBtn" class="flex-1 py-3 sm:py-4 px-3 sm:px-4
+                       rounded-2xl
+                       bg-white/50 dark:bg-neutral-800/50
+                       text-neutral-700 dark:text-neutral-200 
+                       text-base sm:text-lg md:text-xl font-medium
+                       hover:scale-[1.02] active:scale-[0.98] 
+                       transition-all duration-200
+                       border border-neutral-200/50 dark:border-neutral-700/50
+                       flex items-center justify-center gap-2 sm:gap-3
+                       group
+                       select-none" data-astro-cid-z44o3lkb> <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 transition-transform duration-500 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-z44o3lkb> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" data-astro-cid-z44o3lkb></path> </svg> <span class="min-w-[3rem] sm:min-w-[4rem] text-center" data-astro-cid-z44o3lkb>Reset</span> </button> <!-- Info button --> <button id="infoBtn" class="p-3 sm:p-4
+                       rounded-2xl
+                       bg-white/50 dark:bg-neutral-800/50
+                       text-neutral-700 dark:text-neutral-200 
+                       hover:scale-[1.02] active:scale-[0.98] 
+                       transition-all duration-200
+                       border border-neutral-200/50 dark:border-neutral-700/50
+                       flex items-center justify-center
+                       group" aria-label="Timer controls info" data-astro-cid-z44o3lkb> <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-z44o3lkb> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" data-astro-cid-z44o3lkb></path> </svg> </button> </div> </div> <!-- Settings button --> <button id="openSettings" class="mt-2 px-5 py-3
+               rounded-xl
+               bg-white/20 dark:bg-black/20 
+               text-neutral-600 dark:text-neutral-400
+               hover:bg-white/30 dark:hover:bg-black/30
+               transition-all duration-200
+               flex items-center gap-3
+               text-base
+               group" aria-label="Open settings" data-astro-cid-z44o3lkb> <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5
+                   transition-transform duration-500 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-z44o3lkb> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" data-astro-cid-z44o3lkb></path> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" data-astro-cid-z44o3lkb></path> </svg> <span data-astro-cid-z44o3lkb>Settings</span> </button> <!-- Settings modal --> <div id="settingsModal" class="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm 
+           opacity-0 transition-opacity duration-300 hidden z-50" data-astro-cid-dty63hok> <div class="min-h-screen px-4 text-center flex items-center justify-center" data-astro-cid-dty63hok> <div class="relative bg-white dark:bg-neutral-900 w-full max-w-lg
+                   rounded-3xl p-6 md:p-8
+                   transform scale-95 opacity-0 transition-all duration-300
+                   shadow-xl border border-neutral-200/50 dark:border-neutral-800/50" data-astro-cid-dty63hok> <!-- Encabezado --> <div class="flex justify-between items-center mb-6" data-astro-cid-dty63hok> <h2 class="text-xl md:text-2xl font-semibold text-neutral-800 dark:text-neutral-100" data-astro-cid-dty63hok>
+Settings
+</h2> <button id="closeSettings" class="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors" aria-label="Close settings" data-astro-cid-dty63hok> <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-dty63hok> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" data-astro-cid-dty63hok></path> </svg> </button> </div> <!-- Formulario de configuración --> <form id="settingsForm" class="space-y-6" data-astro-cid-dty63hok> <!-- Tiempo de trabajo --> <div class="space-y-2" data-astro-cid-dty63hok> <label class="text-sm text-neutral-600 dark:text-neutral-400 block" data-astro-cid-dty63hok>
+Work time (minutes)
+</label> <input type="number" name="workTime" value="25" min="1" max="60" class="w-full px-4 py-2 rounded-xl border border-neutral-200 dark:border-neutral-800
+                               bg-white dark:bg-neutral-800
+                               text-neutral-800 dark:text-neutral-200
+                               focus:outline-none focus:ring-2 focus:ring-neutral-300 dark:focus:ring-neutral-700" data-astro-cid-dty63hok> </div> <!-- Tiempo de descanso corto --> <div class="space-y-2" data-astro-cid-dty63hok> <label class="text-sm text-neutral-600 dark:text-neutral-400 block" data-astro-cid-dty63hok>
+Short break time (minutes)
+</label> <input type="number" name="shortBreakTime" value="5" min="1" max="30" class="w-full px-4 py-2 rounded-xl border border-neutral-200 dark:border-neutral-800
+                               bg-white dark:bg-neutral-800
+                               text-neutral-800 dark:text-neutral-200
+                               focus:outline-none focus:ring-2 focus:ring-neutral-300 dark:focus:ring-neutral-700" data-astro-cid-dty63hok> </div> <!-- Tiempo de descanso largo --> <div class="space-y-2" data-astro-cid-dty63hok> <label class="text-sm text-neutral-600 dark:text-neutral-400 block" data-astro-cid-dty63hok>
+Long break time (minutes)
+</label> <input type="number" name="longBreakTime" value="15" min="1" max="60" class="w-full px-4 py-2 rounded-xl border border-neutral-200 dark:border-neutral-800
+                               bg-white dark:bg-neutral-800
+                               text-neutral-800 dark:text-neutral-200
+                               focus:outline-none focus:ring-2 focus:ring-neutral-300 dark:focus:ring-neutral-700" data-astro-cid-dty63hok> </div> <!-- Sonido de notificación --> <div class="flex items-center justify-between" data-astro-cid-dty63hok> <span class="text-sm text-neutral-600 dark:text-neutral-400" data-astro-cid-dty63hok>
+Notification sound
+</span> <button type="button" id="soundToggle" class="w-12 h-6 rounded-full bg-neutral-200 dark:bg-neutral-700
+                               flex items-center transition-colors focus:outline-none" role="switch" aria-checked="true" data-astro-cid-dty63hok> <span class="w-5 h-5 rounded-full bg-white dark:bg-neutral-300 shadow transform translate-x-6 transition-transform" data-astro-cid-dty63hok></span> </button> </div> <!-- Auto-iniciar descansos --> <div class="flex items-center justify-between" data-astro-cid-dty63hok> <span class="text-sm text-neutral-600 dark:text-neutral-400" data-astro-cid-dty63hok>
+Auto-start breaks
+</span> <button type="button" id="autoBreakToggle" class="w-12 h-6 rounded-full bg-neutral-200 dark:bg-neutral-700
+                               flex items-center transition-colors focus:outline-none" role="switch" aria-checked="false" data-astro-cid-dty63hok> <span class="w-5 h-5 rounded-full bg-white dark:bg-neutral-300 shadow transform translate-x-0 transition-transform" data-astro-cid-dty63hok></span> </button> </div> <!-- Auto-iniciar trabajo --> <div class="flex items-center justify-between" data-astro-cid-dty63hok> <span class="text-sm text-neutral-600 dark:text-neutral-400" data-astro-cid-dty63hok>
+Auto-start work
+</span> <button type="button" id="autoWorkToggle" class="w-12 h-6 rounded-full bg-neutral-200 dark:bg-neutral-700
+                               flex items-center transition-colors focus:outline-none" role="switch" aria-checked="false" data-astro-cid-dty63hok> <span class="w-5 h-5 rounded-full bg-white dark:bg-neutral-300 shadow transform translate-x-0 transition-transform" data-astro-cid-dty63hok></span> </button> </div> <!-- Botones de acción --> <div class="mt-8 flex gap-4" data-astro-cid-dty63hok> <button type="submit" class="flex-1 px-6 py-2.5 rounded-xl bg-black dark:bg-white
+                               text-white dark:text-black font-medium
+                               hover:opacity-90 transition-opacity" data-astro-cid-dty63hok>
+Save changes
+</button> <button type="button" id="cancelSettings" class="flex-1 px-6 py-2.5 rounded-xl
+                               bg-neutral-100 dark:bg-neutral-800
+                               text-neutral-700 dark:text-neutral-300 font-medium
+                               hover:opacity-90 transition-opacity" data-astro-cid-dty63hok>
+Cancel
+</button> </div> </form> </div> </div> </div>   <!-- Info Modal --> <div id="infoModal" class="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm 
+               opacity-0 transition-opacity duration-300 hidden z-50" data-astro-cid-z44o3lkb> <div class="min-h-screen px-4 text-center flex items-center justify-center" data-astro-cid-z44o3lkb> <div class="relative bg-white dark:bg-neutral-900 w-full max-w-md
+                       rounded-3xl p-6 md:p-8
+                       transform scale-95 opacity-0 transition-all duration-300
+                       shadow-xl border border-neutral-200/50 dark:border-neutral-800/50" data-astro-cid-z44o3lkb> <h2 class="text-xl font-semibold mb-4 text-neutral-800 dark:text-neutral-100" data-astro-cid-z44o3lkb>
+Timer Controls
+</h2> <div class="space-y-4 text-neutral-600 dark:text-neutral-400" data-astro-cid-z44o3lkb> <p class="flex items-center gap-3" data-astro-cid-z44o3lkb> <kbd class="px-2 py-1 rounded bg-neutral-100 dark:bg-neutral-800" data-astro-cid-z44o3lkb>Space</kbd> <span data-astro-cid-z44o3lkb>Start/Pause timer</span> </p> <p class="flex items-center gap-3" data-astro-cid-z44o3lkb> <kbd class="px-2 py-1 rounded bg-neutral-100 dark:bg-neutral-800" data-astro-cid-z44o3lkb>R</kbd> <span data-astro-cid-z44o3lkb>Reset current timer</span> </p> <p class="flex items-center gap-3" data-astro-cid-z44o3lkb> <span class="px-2 py-1 rounded bg-neutral-100 dark:bg-neutral-800" data-astro-cid-z44o3lkb>Click Reset</span> <span data-astro-cid-z44o3lkb>Reset current timer</span> </p> <p class="flex items-center gap-3" data-astro-cid-z44o3lkb> <span class="px-2 py-1 rounded bg-neutral-100 dark:bg-neutral-800" data-astro-cid-z44o3lkb>Hold Reset</span> <span data-astro-cid-z44o3lkb>Reset entire session</span> </p> </div> <button class="mt-6 px-4 py-2 w-full
+                           rounded-xl bg-neutral-100 dark:bg-neutral-800
+                           text-neutral-700 dark:text-neutral-300
+                           hover:opacity-90 transition-opacity" onclick="document.getElementById('infoModal').classList.remove('modal-active'); 
+                             setTimeout(() => document.getElementById('infoModal').classList.add('hidden'), 300);" data-astro-cid-z44o3lkb>
+Close
+</button> </div> </div> </div> </div>   <div class="flex flex-col gap-6 p-4 md:p-8 w-full max-w-2xl mx-auto"> <div class="relative p-6 sm:p-8
+               rounded-2xl md:rounded-3xl
+               bg-white/10 dark:bg-black/10 
+               backdrop-blur-xl 
+               border border-white/20 dark:border-neutral-800/30 
+               shadow-[0_8px_16px_rgba(0,0,0,0.02)] dark:shadow-none"> <div class="absolute inset-0 
+                   rounded-2xl md:rounded-3xl
+                   bg-gradient-to-br from-rose-100/20 via-amber-50/10 to-orange-100/20 
+                   dark:from-neutral-900/20 dark:via-neutral-900/10 dark:to-neutral-800/20 
+                   -z-10"></div> <div class="flex items-center justify-between mb-6"> <h2 class="text-xl font-medium text-neutral-800 dark:text-neutral-100">Tasks</h2> <button id="addTaskBtn" class="p-2 rounded-xl
+                       bg-black/90 dark:bg-white/90
+                       text-white dark:text-black 
+                       hover:scale-[1.02] active:scale-[0.98] 
+                       transition-all duration-200
+                       shadow-sm" aria-label="Add task"> <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path> </svg> </button> </div> <div id="tasksList" class="space-y-3"> <!-- Tasks will be inserted here --> </div> <form id="addTaskForm" class="scale-95 opacity-0 hidden mt-6 p-6
+                   rounded-xl
+                   bg-white/50 dark:bg-black/50
+                   border border-white/20 dark:border-neutral-800/30
+                   transition-all duration-300 ease-out"> <div class="space-y-5"> <div> <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">
+Task name
+</label> <input type="text" id="taskName" placeholder="What do you need to do?" class="w-full px-4 py-2.5
+                               rounded-lg
+                               bg-white/50 dark:bg-black/50
+                               border border-neutral-200/50 dark:border-neutral-700/50
+                               text-neutral-800 dark:text-neutral-100
+                               placeholder-neutral-400 dark:placeholder-neutral-500
+                               focus:outline-none focus:ring-2 focus:ring-rose-500/50
+                               transition-all duration-200" required> </div> <div> <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">
+Description (supports Markdown)
+</label> <textarea id="taskDescription" rows="3" placeholder="Add some details about your task..." class="w-full px-4 py-2.5
+                               rounded-lg
+                               bg-white/50 dark:bg-black/50
+                               border border-neutral-200/50 dark:border-neutral-700/50
+                               text-neutral-800 dark:text-neutral-100
+                               placeholder-neutral-400 dark:placeholder-neutral-500
+                               focus:outline-none focus:ring-2 focus:ring-rose-500/50
+                               transition-all duration-200
+                               resize-none"></textarea> </div> <div> <label class="block text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">
+Estimated pomodoros
+</label> <div class="flex items-center gap-3"> <button type="button" id="decrementPomodoros" class="p-2 rounded-lg
+                                   bg-neutral-200/50 dark:bg-neutral-800/50
+                                   hover:bg-neutral-300/50 dark:hover:bg-neutral-700/50
+                                   transition-colors duration-200"> <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path> </svg> </button> <input type="number" id="taskPomodoros" min="1" value="1" class="w-24 px-4 py-2.5 text-center
+                                   rounded-lg
+                                   bg-white/50 dark:bg-black/50
+                                   border border-neutral-200/50 dark:border-neutral-700/50
+                                   text-neutral-800 dark:text-neutral-100
+                                   focus:outline-none focus:ring-2 focus:ring-rose-500/50
+                                   transition-all duration-200"> <button type="button" id="incrementPomodoros" class="p-2 rounded-lg
+                                   bg-neutral-200/50 dark:bg-neutral-800/50
+                                   hover:bg-neutral-300/50 dark:hover:bg-neutral-700/50
+                                   transition-colors duration-200"> <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path> </svg> </button> </div> </div> <div class="flex gap-2 justify-end pt-2"> <button type="button" id="cancelAddTask" class="px-4 py-2.5
+                               rounded-lg
+                               bg-neutral-200/50 dark:bg-neutral-800/50
+                               text-neutral-600 dark:text-neutral-400
+                               hover:bg-neutral-300/50 dark:hover:bg-neutral-700/50
+                               transition-all duration-200">
+Cancel
+</button> <button type="submit" class="px-4 py-2.5
+                               rounded-lg
+                               bg-black/90 dark:bg-white/90
+                               text-white dark:text-black
+                               hover:scale-[1.02] active:scale-[0.98]
+                               transition-all duration-200">
+Add task
+</button> </div> </div> </form> </div> </div>  <button id="musicToggle" class="fixed bottom-6 right-6 p-4 rounded-full bg-white/10 dark:bg-black/10 backdrop-blur-lg border border-white/20 dark:border-neutral-800/30 shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 text-neutral-600 dark:text-neutral-400 z-50" aria-label="Toggle music player" data-astro-cid-m4bp4voy> <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-m4bp4voy> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" data-astro-cid-m4bp4voy></path> </svg> </button> <div id="musicPanel" class="fixed bottom-24 right-6 w-80 bg-white/10 dark:bg-black/10 backdrop-blur-lg border border-white/20 dark:border-neutral-800/30 rounded-2xl shadow-lg transform translate-y-[120%] opacity-0 transition-all duration-500 ease-out z-40 hidden" data-astro-cid-m4bp4voy> <div class="p-4 space-y-4" data-astro-cid-m4bp4voy> <div class="flex items-center gap-3" data-astro-cid-m4bp4voy> <div class="w-12 h-12 overflow-hidden rounded-lg" data-astro-cid-m4bp4voy> <img id="playlistThumbnail" src="https://i.ytimg.com/vi/jfKfPfyJRdk/maxresdefault.jpg" alt="Playlist thumbnail" class="w-full h-full object-cover" data-astro-cid-m4bp4voy> </div> <div class="flex-1 min-w-0" data-astro-cid-m4bp4voy> <select id="playlistSelect" class="w-full px-3 py-1.5 rounded-lg bg-white/5 dark:bg-black/5 text-neutral-700 dark:text-neutral-200 border border-white/10 dark:border-neutral-800/30 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-rose-500/20" data-astro-cid-m4bp4voy> <option value="Lofi Girl" data-astro-cid-m4bp4voy>Lofi Girl</option><option value="Chillhop" data-astro-cid-m4bp4voy>Chillhop</option><option value="Coffee Shop" data-astro-cid-m4bp4voy>Coffee Shop</option><option value="Jazz Bar" data-astro-cid-m4bp4voy>Jazz Bar</option><option value="Classical Music" data-astro-cid-m4bp4voy>Classical Music</option> </select> </div> </div> <div class="flex flex-col gap-2" data-astro-cid-m4bp4voy> <div class="flex items-center justify-center gap-4" data-astro-cid-m4bp4voy> <button id="playPauseBtn" class="w-12 h-12 rounded-full bg-rose-500/90 hover:bg-rose-600/90 text-white flex items-center justify-center transition-all duration-200 group" aria-label="Play/Pause" data-astro-cid-m4bp4voy> <svg id="playIcon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-m4bp4voy> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" data-astro-cid-m4bp4voy></path> </svg> <svg id="pauseIcon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-m4bp4voy> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6" data-astro-cid-m4bp4voy></path> </svg> </button> </div> <div class="flex items-center gap-3 px-1" data-astro-cid-m4bp4voy> <svg id="volumeIcon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-m4bp4voy> <path id="volumeMuted" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" data-astro-cid-m4bp4voy></path> <path id="volumeLow" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M12 6l8.5-6v24l-8.5-6H5a2 2 0 01-2-2V8a2 2 0 012-2h7z" data-astro-cid-m4bp4voy></path> <path id="volumeMedium" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.071 5.929a9 9 0 010 12.728M15.536 8.464a5 5 0 010 7.072M12 6l8.5-6v24l-8.5-6H5a2 2 0 01-2-2V8a2 2 0 012-2h7z" data-astro-cid-m4bp4voy></path> <path id="volumeHigh" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21.5 4.5a13 13 0 010 15M19.071 5.929a9 9 0 010 12.728M15.536 8.464a5 5 0 010 7.072M12 6l8.5-6v24l-8.5-6H5a2 2 0 01-2-2V8a2 2 0 012-2h7z" data-astro-cid-m4bp4voy></path> </svg> <input type="range" min="0" max="100" value="50" id="volumeControl" class="flex-1" data-astro-cid-m4bp4voy> </div> </div> <div id="player" data-astro-cid-m4bp4voy></div> <div class="text-xs text-neutral-500 dark:text-neutral-400 flex items-center gap-2 bg-yellow-500/10 dark:bg-yellow-300/5 rounded-lg p-2.5" data-astro-cid-m4bp4voy> <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-m4bp4voy> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" data-astro-cid-m4bp4voy></path> </svg> <span data-astro-cid-m4bp4voy>If you experience playback issues, consider disabling AdBlock on this page (YouTube Policy)</span> </div> </div> </div>   <div class="w-full max-w-md mx-auto mt-8 mb-4"> <div class="h-px bg-gradient-to-r from-transparent via-neutral-800/20 dark:via-neutral-200/20 to-transparent"></div> <div class="flex flex-col items-center gap-3 mt-4"> <p class="text-sm text-neutral-600 dark:text-neutral-400 text-center">
+Built with care for better focus ✨
+</p> <a href="https://github.com/Natxo09" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-2 
+                   text-sm text-neutral-600 dark:text-neutral-400
+                   hover:text-neutral-800 dark:hover:text-neutral-200
+                   transition-colors duration-200
+                   rounded-lg
+                   hover:bg-neutral-500/10 dark:hover:bg-neutral-500/10"> <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"> <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path> </svg> <span>Natxo09</span> </a> </div> </div> </main>  </main>  </body></html> 
