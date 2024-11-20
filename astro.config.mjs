@@ -7,6 +7,6 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   integrations: [tailwind()],
 
-  site: "https://natxo09.github.io/smartpomodoro/",
-  base: "smartpomodoro"
+  site: "https://natxo09.github.io/SmartPomodoro/",
+  base: "SmartPomodoro"
 });
